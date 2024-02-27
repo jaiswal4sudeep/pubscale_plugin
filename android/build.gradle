@@ -1,0 +1,44 @@
+group 'com.rayole.pubscale_plugin'
+version '1.0'
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.1.2'
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 34
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    defaultConfig {
+        minSdkVersion 21
+    }
+
+    dependencies {
+        implementation('com.pubscale.sdkone:offerwall:1.0.6-beta1')
+        implementation 'androidx.annotation:annotation:1.1.0'
+    }
+}
+
+//dependencies {
+//    implementation fileTree(dir: 'gradle/wrapper', include: ['*.aar', '*.jar'], exclude: [])
+//}
