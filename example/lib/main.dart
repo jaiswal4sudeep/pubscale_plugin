@@ -13,6 +13,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final PubscalePlugin _plugin = PubscalePlugin.instance;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -25,12 +27,10 @@ class _MyAppState extends State<MyApp> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               GestureDetector(
-                onTap: () {
-                  PubscalePlugin.instance.initSDK(
-                    appId: '78069356',
-                    userId: 'ayush',
-                  );
-                },
+                onTap: () async => await _plugin.initSDK(
+                  appId: '10964991',
+                  userId: '1234567890',
+                ),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20,
@@ -47,9 +47,7 @@ class _MyAppState extends State<MyApp> {
                 height: 50,
               ),
               GestureDetector(
-                onTap: () {
-                  PubscalePlugin.instance.showOfferwall();
-                },
+                onTap: () async => await _plugin.showOfferwall(),
                 child: Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 10),

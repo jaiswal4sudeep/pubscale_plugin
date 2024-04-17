@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import 'pubscale_plugin_platform_interface.dart';
 
 class PubscalePlugin {
@@ -7,14 +9,26 @@ class PubscalePlugin {
 
   final PubscalePluginPlatform _platform = PubscalePluginPlatform.instance;
 
-  Future<void> initSDK({
+  Future<bool> initSDK({
     required String appId,
     required String userId,
-  }) async =>
-      await _platform.initSDK(
-        appId,
-        userId,
-      );
+  }) async {
+    try {
+      await _platform.initSDK(appId, userId);
+      return true; // Initialization succeeded
+    } catch (e) {
+      debugPrint('Failed to initialize SDK: $e');
+      return false; // Initialization failed
+    }
+  }
 
-  Future<void> showOfferwall() async => await _platform.showOfferWall();
+  Future<bool> showOfferwall() async {
+    try {
+      await _platform.showOfferWall();
+      return true; // Offerwall shown successfully
+    } catch (e) {
+      debugPrint('Failed to show offerwall: $e');
+      return false; // Failed to show offerwall
+    }
+  }
 }

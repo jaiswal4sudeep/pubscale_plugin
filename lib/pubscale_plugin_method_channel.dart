@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
@@ -10,19 +12,29 @@ class MethodChannelPubscalePlugin extends PubscalePluginPlatform {
   final methodChannel = const MethodChannel('pubscale_plugin');
 
   @override
-  Future<void> initSDK(
-      String appId,
-      String userId,
-      ) =>
-      methodChannel.invokeMethod<bool>(
-        'initSDK',
-        {
-          'appId': appId,
-          'userId': userId,
-        },
-      );
+  Future<bool> initSDK(String appId, String userId) async {
+    try {
+      await methodChannel.invokeMethod<bool>('initSDK', {
+        'appId': appId,
+        'userId': userId,
+      });
+      log('Pubscale initialization succeeded');
+      return true;
+    } catch (e) {
+      log('Failed to initialize SDK: $e');
+      return false;
+    }
+  }
 
   @override
-  Future<void> showOfferWall() =>
-      methodChannel.invokeMethod<bool>('showOfferwall', {});
+  Future<bool> showOfferWall() async {
+    try {
+      await methodChannel.invokeMethod<bool>('showOfferwall');
+      log('Pubscale offerwall shown successfully');
+      return true;
+    } catch (e) {
+      log('Failed to show offerwall: $e');
+      return false;
+    }
+  }
 }

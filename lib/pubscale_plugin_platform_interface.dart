@@ -23,14 +23,14 @@ abstract class PubscalePluginPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<void> initSDK(
+  Future<bool> initSDK(
       String appId,
       String userId,
       ) {
     throw UnimplementedError('initSDK() has not been implemented.');
   }
 
-  Future<void> showOfferWall() {
+  Future<bool> showOfferWall() {
     throw UnimplementedError('showOfferWall() has not been implemented.');
   }
 }

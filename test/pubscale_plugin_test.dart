@@ -8,12 +8,12 @@ class MockPubscalePluginPlatform
     implements PubscalePluginPlatform {
       
   @override
-  Future<void> initSDK(String appId, String userId) {
+  Future<bool> initSDK(String appId, String userId) {
     throw UnimplementedError();
   }
 
   @override
-  Future<void> showOfferWall() {
+  Future<bool> showOfferWall() {
     throw UnimplementedError();
   }
 }

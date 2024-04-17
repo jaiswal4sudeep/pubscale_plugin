@@ -1,6 +1,5 @@
 package com.rayole.pubscale_plugin;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
@@ -27,15 +26,11 @@ import java.util.Objects;
 
 /** PubscalePlugin */
 public class PubscalePlugin implements FlutterPlugin, MethodCallHandler, ActivityAware {
-  /// The MethodChannel that will the communication between Flutter and native Android
-  ///
-  /// This local reference serves to register the plugin with the Flutter Engine and unregister it
-  /// when the Flutter Engine is detached from the Activity
-  private  Context context;
-
+  private Context context;
   private Activity activity;
-
   private MethodChannel channel;
+
+  private static final int MAX_RETRY_ATTEMPTS = 3;
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
@@ -49,12 +44,12 @@ public class PubscalePlugin implements FlutterPlugin, MethodCallHandler, Activit
 
   @Override
   public void onDetachedFromActivityForConfigChanges() {
-
+    activity = null;
   }
 
   @Override
   public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding activityPluginBinding) {
-
+    activity = activityPluginBinding.getActivity();
   }
 
   @Override
@@ -67,68 +62,97 @@ public class PubscalePlugin implements FlutterPlugin, MethodCallHandler, Activit
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
     if (call.method.equals("initSDK")) {
-      this.initSdk((HashMap) call.arguments);
-      result.success(Boolean.TRUE);
+      HashMap<String, Object> args = call.arguments();
+      if (args != null) {
+        boolean success = initSdk(args);
+        result.success(success);
+      } else {
+        Log.e("ERROR", "initSDK called with null arguments");
+        result.error("ARGS_NULL", "initSDK called with null arguments", null);
+      }
     } else if (call.method.equals("showOfferwall")) {
-      this.showOfferWall();
-      result.success(Boolean.TRUE);
+      boolean success = showOfferWall();
+      result.success(success);
     } else {
       result.notImplemented();
     }
   }
 
-  OfferWallListener offerWallListener = new OfferWallListener() {
-
-    @Override
-    public void onRewardClaimed(Reward reward) {
-
-    }
-
-    @Override
-    public void onOfferWallShowed() {
-      Log.d("PUBSCALE", "Offer wall showed.");
-    }
-
-    @Override
-    public void onOfferWallClosed() {
-      Log.d("PUBSCALE", "Offer wall closed.");
-    }
-
-    @Override
-    public void onFailed(@NonNull String message) {
-      Log.d("PUBSCALE", "onFailed: " + message);
-    }
-  };
-
-  private void initSdk(final HashMap args) {
+  private boolean initSdk(final HashMap<String, Object> args) {
     String appId = Objects.requireNonNull(args.get("appId")).toString();
     String userId = Objects.requireNonNull(args.get("userId")).toString();
-    Log.e("appId", appId);
-    Log.e("userId", userId);
-    OfferWallConfig offerWallConfig =
-            new OfferWallConfig.Builder(context, appId)
-                    .setUniqueId(userId)
-                    .setFullscreenEnabled(true)
-                    .build();
-    OfferWall.init(offerWallConfig, new OfferWallInitListener() {
-      @Override
-      public void onInitFailed(InitError initError) {
-        Log.e("ERROR", initError.toString());
-      }
 
-      @Override
-      public void onInitSuccess() {
-        Log.e("SUCCESS", "Pubscale Initialised");
+    final boolean[] success = {false}; // Array to hold the success status
+    final int[] attempts = {0}; // Array to hold the attempt count
+
+    while (attempts[0] < MAX_RETRY_ATTEMPTS) {
+      attempts[0]++;
+      final int currentAttempt = attempts[0]; // Capture current attempt count in a final variable
+
+      try {
+        OfferWallConfig offerWallConfig =
+                new OfferWallConfig.Builder(context, appId)
+                        .setUniqueId(userId)
+                        .setFullscreenEnabled(true)
+                        .build();
+        OfferWall.init(offerWallConfig, new OfferWallInitListener() {
+          @Override
+          public void onInitFailed(InitError initError) {
+            Log.e("ERROR", "Initialization attempt " + currentAttempt + " failed: " + initError.toString());
+          }
+
+          @Override
+          public void onInitSuccess() {
+            Log.e("SUCCESS", "Pubscale Initialized");
+            success[0] = true; // Set success to true on successful initialization
+          }
+        });
+
+        if (success[0]) {
+          break; // Exit the loop if initialization succeeded
+        }
+      } catch (Exception e) {
+        Log.e("ERROR", "Initialization attempt " + currentAttempt + " failed with exception: " + e.getMessage());
       }
-    });
+    }
+    return success[0]; // Return the final success status
   }
 
-  private void showOfferWall() {
-    OfferWall.launch(activity, offerWallListener);
+
+  private boolean showOfferWall() {
+    int attempts = 0;
+    while (attempts < MAX_RETRY_ATTEMPTS) {
+      attempts++;
+      try {
+        OfferWall.launch(activity, new OfferWallListener() {
+          @Override
+          public void onRewardClaimed(Reward reward) {}
+
+          @Override
+          public void onOfferWallShowed() {
+            Log.d("PUBSCALE", "Offer wall showed.");
+          }
+
+          @Override
+          public void onOfferWallClosed() {
+            Log.d("PUBSCALE", "Offer wall closed.");
+          }
+
+          @Override
+          public void onFailed(@NonNull String message) {
+            Log.d("PUBSCALE", "onFailed: " + message);
+          }
+        });
+        return true; // Showing offerwall succeeded
+      } catch (Exception e) {
+        Log.e("ERROR", "Show attempt " + attempts + " failed with exception: " + e.getMessage());
+      }
+    }
+    return false; // Showing offerwall failed
   }
 
   @Override
   public void onDetachedFromActivity() {
-
+    activity = null;
   }
 }
