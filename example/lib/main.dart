@@ -19,18 +19,17 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
+        appBar: AppBar(title: const Text('Plugin example app')),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               GestureDetector(
-                onTap: () async => await _plugin.initSDK(
-                  appId: '10964991',
-                  userId: '1234567890',
-                ),
+                onTap:
+                    () async => await _plugin.initSDK(
+                      appId: '10964991',
+                      userId: '1234567890',
+                    ),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20,
@@ -43,14 +42,14 @@ class _MyAppState extends State<MyApp> {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 50,
-              ),
+              const SizedBox(height: 50),
               GestureDetector(
                 onTap: () async => await _plugin.showOfferwall(),
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 10,
+                  ),
                   color: Colors.black,
                   child: const Text(
                     'Show',
