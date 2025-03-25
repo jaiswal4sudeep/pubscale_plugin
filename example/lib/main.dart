@@ -23,39 +23,18 @@ class _MyAppState extends State<MyApp> {
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            spacing: 25,
             children: [
-              GestureDetector(
-                onTap:
-                    () async => await _plugin.initSDK(
-                      appId: '10964991',
-                      userId: '1234567890',
-                    ),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 10,
-                  ),
-                  color: Colors.black,
-                  child: const Text(
-                    'Init',
-                    style: TextStyle(color: Colors.white),
-                  ),
+              FilledButton(
+                onPressed: () async => await _plugin.initSDK(
+                  appId: '60560882',
+                  userId: '1234567890',
                 ),
+                child: const Text('Init'),
               ),
-              const SizedBox(height: 50),
-              GestureDetector(
-                onTap: () async => await _plugin.showOfferwall(),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 10,
-                  ),
-                  color: Colors.black,
-                  child: const Text(
-                    'Show',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
+              FilledButton(
+                onPressed: () async => await _plugin.showOfferwall(),
+                child: const Text('Show'),
               ),
             ],
           ),

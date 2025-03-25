@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.rayole.pubscale_plugin_example">
+    package="com.adzvortex.example">
    <application
-        android:label="pubscale_plugin_example"
+        android:label="example"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.rayole.pubscale_plugin">
+  package="com.adzvortex.pubscale_plugin">
     <application
         android:theme="@style/Theme.AppCompat.Light">
     </application>

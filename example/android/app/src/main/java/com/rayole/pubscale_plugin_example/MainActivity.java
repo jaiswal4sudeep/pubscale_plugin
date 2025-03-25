@@ -1,4 +1,4 @@
-package com.rayole.pubscale_plugin_example;
+package com.adzvortex.example;
 
 import io.flutter.embedding.android.FlutterActivity;
 
