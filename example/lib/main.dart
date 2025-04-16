@@ -27,8 +27,8 @@ class _MyAppState extends State<MyApp> {
             children: [
               FilledButton(
                 onPressed: () async => await _plugin.initSDK(
-                  appId: '60560882',
-                  userId: '1234567890',
+                  appId: '<APP_ID>',
+                  userId: '<USER_ID>',
                 ),
                 child: const Text('Init'),
               ),
