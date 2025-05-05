@@ -1,4 +1,4 @@
-package com.adzvortex.pubscale_plugin;
+package com.sudeep.pubscale_plugin;
 
 import android.app.Activity;
 import android.content.Context;

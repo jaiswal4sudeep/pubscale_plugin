@@ -35,7 +35,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.adzvortex.pubscale_plugin
+        package: com.sudeep.pubscale_plugin
         pluginClass: PubscalePlugin
 
   # To add assets to your plugin package, add an assets section, like this:

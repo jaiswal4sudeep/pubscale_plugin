@@ -1,4 +1,4 @@
-package com.adzvortex.example;
+package com.sudeep.example;
 
 import io.flutter.embedding.android.FlutterActivity;
 
